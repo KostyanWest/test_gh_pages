@@ -1,0 +1,504 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="KostyanWest">
+        <link rel="stylesheet" href="styles/round-page.css" type="text/css"/>
+        <link rel="stylesheet" href="styles/round-page-deck.css" type="text/css"/>
+        <link rel="stylesheet" href="styles/round-result-page.css" type="text/css"/>
+        <script src="scripts/timer.js"></script>
+        <script src="scripts/round-page.js"></script>
+        <script src="scripts/round-page-deck.js"></script>
+        <script src="scripts/round-result-page.js"></script>
+        <title>Alias Game</title>
+        <style>
+            html, body {
+                margin: 0px;
+                min-height: 100vh;
+            }
+
+            .template {
+                display: none;
+            }
+
+            .color-scheme {
+                --primary-color: #c743db;
+                --secondary-color: #00d8d8;
+                --local-color: var(--primary-color);
+                --background-color: #fafafa;
+                --text-color: black;
+                --text-color-contrasted: white;
+            }
+
+            .color-scheme_dark {
+                --primary-color: #c743db;
+                --secondary-color: #00d8d8;
+                --local-color: var(--primary-color);
+                --background-color: #333333;
+                --text-color: white;
+                --text-color-contrasted: white;
+            }
+
+            .color-scheme__primary {
+                --local-color: var(--primary-color);
+            }
+
+            .color-scheme__secondary {
+                --local-color: var(--secondary-color);
+            }
+
+            .body {
+                display: flex;
+                flex-flow: column nowrap;
+                background-color: var(--background-color);
+                color: var(--text-color);
+            }
+
+            .body__header {
+                flex: 0 0 auto;
+                padding: 0.2em;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .body__header_viewport {
+                border-bottom: 2px solid var(--text-color);
+                background-color: var(--local-color);
+                color: var(--text-color-contrasted);
+                font-size: 2rem;
+            }
+
+            .body__header_page {
+                margin: 0.5em;
+                border-bottom: 2px solid var(--primary-color);
+                padding: 0em, 0.5em, 0em, 0.5em;
+                color: var(--text-color);
+                font-size: 1.5rem;
+            }
+
+            .body__main {
+                flex: 1 0 auto;
+            }
+
+            .body__footer {
+                flex: 0 0 auto;
+            }
+
+            .lable-flow {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: space-between;
+                align-items: center;
+                align-content: flex-start;
+            }
+
+            .main-flow {
+                display: flex;
+                flex-flow: row nowrap;
+            }
+
+            .main-flow__margin {
+                flex: 0 1000 50vw;
+            }
+
+            .main-flow__central {
+                flex: 0 1 52rem;
+            }
+
+            .central-flow {
+                display: flex;
+                flex-flow: row wrap;
+                align-content: flex-start;
+            }
+
+            .central-flow__column {
+                flex: 1 1 10rem;
+            }
+
+            .central-flow__page {
+                flex: 10 1 30rem;
+                min-height: 95%;
+                border: 1px dashed var(--primary-color);
+                overflow: hidden;
+            }
+
+            .button {
+                padding: 0.4em;
+                text-align: center;
+                color: var(--text-color);
+                background-image: linear-gradient(-45deg, var(--background-color) 40%, var(--local-color) 50%, var(--background-color) 60%);
+                background-position: 0%;
+                background-size: 320%;
+                cursor: pointer;
+                transition: padding 200ms linear;
+            }
+
+                .button:hover {
+                    background-image: linear-gradient(-45deg, var(--background-color) 40%, var(--local-color) 50%, var(--background-color) 60%);
+                    background-position: 100%;
+                    padding-left: 0.2em;
+                    padding-right: 0.6em;
+                    transition: all 200ms linear;
+                }
+
+                .button:active {
+                    background-position: 0%;
+                    transition: none;
+                }
+
+                .button:disabled {
+                    background-image: linear-gradient(-45deg, var(--local-color) 50%, var(--background-color) 50%);
+                    background-position: 100%;
+                    padding: 0.4em;
+                    color: var(--text-color-contrasted);
+                    cursor: default;
+                    transition: all 200ms linear;
+                }
+
+            .nav-bar {
+                display: flex;
+                flex-flow: row-reverse wrap-reverse;
+                justify-content: space-between;
+                align-items: flex-start;
+                align-content:flex-start;
+                border: 2px solid var(--local-color);
+                border-radius: 10px;
+            }
+
+            .nav-bar__item {
+                flex: 1 1 8rem;
+                border: inherit;
+                border-width: 0px 1px 1px 0px;
+                border-radius: 0px;
+                font-size: 1.2rem;
+            }
+
+            .page {
+                margin: 0em;
+                border: 1px dashed var(--secondary-color);
+                opacity: 1;
+                transition: all 200ms ease-out;
+            }
+
+            .page_play-area {
+                width: 100%;
+                height: 100%;
+                user-select: none; 
+            }
+
+            .page_hidden {
+                margin-left: 5rem;
+                margin-right: -5rem;
+                opacity: 0;
+                transition: opacity 80ms linear, margin 0ms linear 80ms;
+            }
+        </style>
+        <script>
+            let current_nav_btn = null;
+            const nav_map = new WeakMap();
+
+            function navBtnClick(btn) {
+                let old_page = nav_map.get(current_nav_btn);
+                old_page.classList.add('page_hidden');
+
+                current_nav_btn.disabled = false;
+                current_nav_btn = btn;
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    old_page.style.display = 'none';
+                    //old_page.hidden = true;
+                    if (current_nav_btn === btn) {
+                        let new_page = nav_map.get(btn);
+                        new_page.style.display = 'flex';
+                        new_page.classList.remove('page_hidden');
+                    }
+                }, 100);
+            }
+
+            
+
+            class NavBar {
+
+            }
+
+            class Rules {
+                constructor(word_count, round_time) {
+                    this.word_count = word_count;
+                    this.round_time = round_time;
+                }
+            }
+
+            class Team {
+                constructor(name) {
+                    this.name = name;
+                    this.score = 0;
+                }
+            }
+
+            function gainGetWords(word) {
+                let counter = document.getElementById('game_counter_get');
+                counter.textContent = '+' + ++counter.textContent;
+                counter.classList.add('round-page__counter_gain');
+                setTimeout(() => { counter.classList.remove('round-page__counter_gain'); }, 100);
+            }
+
+            function gainDropWords(word) {
+                let counter = document.getElementById('game_counter_drop');
+                counter.textContent = --counter.textContent;
+                counter.classList.add('round-page__counter_gain');
+                setTimeout(() => { counter.classList.remove('round-page__counter_gain'); }, 100);
+            }
+
+            function makeGrabbableCard(card) {
+                const rect = card.getBoundingClientRect();
+                const card_base = window.scrollY + rect.top;
+                const card_height = rect.height;
+                let grab_offset = 0;
+                const hint_get = document.getElementById('game_hint_get');
+                const hint_drop = document.getElementById('game_hint_drop');
+
+                function drop(event) {
+                    card.classList.remove('round-page-deck__card_grabbing');
+                    document.removeEventListener('mousemove', move);
+                    document.removeEventListener('mouseup', drop);
+                    hint_get.classList.add('round-page__hint_hidden_get');
+                    hint_drop.classList.add('round-page__hint_hidden_drop');
+                    card.style.top = '';
+                    const move_offset = window.scrollY + event.clientY - card_base - grab_offset;
+                    if (move_offset <= -card_height / 2) {
+                        card.classList.add('round-page-deck__card_hidden_get');
+                        gainGetWords(card.textContent);
+                        card.onmousedown = null;
+                        setTimeout(() => { card.parentNode.removeChild(card); }, 200);
+                    }
+                    else if (move_offset >= card_height / 2) {
+                        card.classList.add('round-page-deck__card_hidden_drop');
+                        gainDropWords(card.textContent);
+                        card.onmousedown = null;
+                        setTimeout(() => { card.parentNode.removeChild(card); }, 200);
+                    }
+                }
+
+                function move(event) {
+                    const move_offset = window.scrollY + event.clientY - card_base - grab_offset;
+                    card.style.top = Math.min(Math.max(move_offset, -card_height), card_height) + 'px';
+                    if (move_offset <= -card_height / 2)
+                        hint_get.classList.add('round-page__hint_excited');
+                    else
+                        hint_get.classList.remove('round-page__hint_excited');
+                    if (move_offset >= card_height / 2)
+                        hint_drop.classList.add('round-page__hint_excited');
+                    else
+                        hint_drop.classList.remove('round-page__hint_excited');
+                }
+
+                function grab(event) {
+                    grab_offset = window.scrollY + event.clientY - card_base;
+                    card.classList.add('round-page-deck__card_grabbing');
+                    document.addEventListener('mousemove', move);
+                    document.addEventListener('mouseup', drop);
+                    hint_get.classList.remove('round-page__hint_hidden_get');
+                    hint_drop.classList.remove('round-page__hint_hidden_drop');
+                }
+
+                card.onmousedown = grab;
+            }
+
+            class GameRound {
+                constructor(rules, team) {
+                    this.time_remaining = rules.round_time;
+                    this.current_team = team;
+                }
+
+                grabCard(event) {
+
+                }
+
+                getWord(word) {
+
+                }
+
+                dropWord(word) {
+
+                }
+            }
+
+            class GameSession {
+                constructor(rules, team1, team2) {
+                    this.rules = rules;
+                    this.team1 = team1;
+                    this.team2 = team2;
+                    this.current_team = team1;
+                }
+
+                beginRound(page) {
+                    let round = new GameRound(this.rules, this.current_team);
+
+                }
+            }
+
+            function boo(event) {
+                but.disabled = false;
+                but = event.currentTarget;
+                event.currentTarget.disabled = true;
+            }
+        </script>
+    </head>
+    <body class="body color-scheme color-scheme_dark">       
+        <header class="lable-flow body__header body__header_viewport">
+            <span>Alias Game</span>
+            <div>
+                <span>Lol</span>
+                <span>Kek</span>
+                <span>Ch</span>
+            </div>
+        </header>
+
+        <main class="body__main main-flow">
+            <span class="main-flow__margin"></span>
+            <div class="main-flow__central central-flow">
+                <div class="central-flow__column">
+                    <div class="color-scheme__primary">
+                        <!-- The buttons' reverse order with the nav-bar's reverse flex-flow is
+    a workaround to squeeze out the "play" button in the "1 above 2" case -->
+                        <nav class="nav-bar">
+                            <button id="nav_btn_settings" class="button nav-bar__item" onclick="navBtnClick(this)">Правила</button>
+                            <button id="nav_btn_teams" class="button nav-bar__item" onclick="navBtnClick(this)">Команды</button>
+                            <button id="nav_btn_play" class="button nav-bar__item" onclick="navBtnClick(this)" disabled>Играть</button>
+                        </nav>
+                    </div>
+                    <div class="color-scheme__secondary" style="display: none">
+                        <nav class="nav-bar">
+                            <button class="nav-bar__item">Играть</button>
+                            <button class="nav-bar__item">Команды</button>
+                            <button class="nav-bar__item">Настройки</button>
+                        </nav>
+                    </div>
+                </div>
+                <div class="central-flow__page">
+
+                    <section id="round_page" class="body page page_play-area">
+                        <header class="lable-flow body__header body__header_page">
+                            <span>Кукареки</span>
+                            <span>Раунд 1</span>
+                        </header>
+                        <div class="body__main round-page">
+                            <div id="game_timer" class="round-page__timer">
+                                <span id="game_timer_min">0</span>
+                                <span>:</span>
+                                <span id="game_timer_sec">0</span>
+                            </div>
+                            <span id="game_hint_get" class="round-page__hint round-page__hint_hidden_get">Потяни вверх, чтобы начать</span>
+                            <span id="game_counter_get" class="round-page__counter round-page__counter_type_get">+0</span>
+                            <div id="game_deck" class="round-page-deck">
+                                <span class="round-page-deck__card template">? ? ?</span>
+                            </div>
+                            <span id="game_counter_drop" class="round-page__counter round-page__counter_type_drop">-0</span>
+                            <span id="game_hint_drop" class="round-page__hint round-page__hint_hidden_drop">Потяни вверх, чтобы начать</span>
+                        </div>
+                    </section>
+
+                    <section id="round_result_page" class="body page" style="display: none">
+                        <header class="lable-flow body__header body__header_page">
+                            <span>Кукареки</span>
+                            <span>Раунд 1</span>
+                        </header>
+                        <div class="body__main round-result-page">
+                            <div class="lable-flow round-result-page__lable template">
+                                <span class="round-result-page__word">Слово</span>
+                                <div>
+                                    <button class="color-scheme__secondary button round-result-page__button">&#10003;</button>
+                                    <button class="color-scheme__primary button round-result-page__button">&#10006;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="page round-page" style="display: none">
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                        <span class="round-page__hint">Потяни вверх, если отгадали</span>
+                    </section>
+
+                </div>
+                <span class="central-flow__column"></span>
+            </div>
+            <span class="main-flow__margin"></span>
+        </main>
+
+        <footer class="body__footer">
+            <hr class="separator">
+            <div class="footer-content">
+                <span class="text">&#169;Polina Zorko</span>
+                <nav class="options">
+                    <a href="https://github.com/polina-Z"><img src="images/github.png" alt="github logo" class="link-icon"></a>
+                    <a href="https://t.me/Polina_zorko"><img src="images/telegram.png" alt="telegram logo" class="link-icon second-link"></a>
+                </nav>
+            </div>
+        </footer>
+        <script>
+            current_nav_btn = nav_btn_play;
+            //makeGrabbableCard(game_card);
+            //let ttt = new Timer(game_timer);
+            //ttt.time = 9;
+            //ttt.start();
+
+            let PAGR = new RoundPage(round_page);
+            PAGR.init(0, 0, 0);
+            //PAGR.timer.start();
+
+            nav_map.set(nav_btn_play, round_page);
+            nav_map.set(nav_btn_teams, round_page);
+            nav_map.set(nav_btn_settings, round_result_page);
+            //but = document.getElementsByClassName('nav-bar__item')[0];
+            but = nav_btn_play;
+
+            /*async function zxc() {
+                let promise = new Promise((resolve, reject) => {
+                    setTimeout(() => resolve("готово!"), 2000)
+                });
+                let result = await promise;
+                alert(result);
+            }*/
+
+            //zxc();
+            //alert('after');
+        </script>
+    </body>
+</html>

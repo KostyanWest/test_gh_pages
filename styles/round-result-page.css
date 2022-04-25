@@ -1,0 +1,23 @@
+﻿.round-result-page {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.round-result-page__lable {
+    margin: 0.5em;
+    padding: 0em, 0.5em, 0em, 0.5em;
+    border-bottom: 1px solid var(--text-color);
+}
+
+.round-result-page__word {
+    color: var(--text-color);
+    font-size: 1.8rem;
+}
+
+.round-result-page__button {
+    width: 4rem;
+    margin: 0.3em;
+    border: 1px solid var(--local-color);
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
