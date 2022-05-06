@@ -18,10 +18,12 @@ Wireframes
 ----------
 
 Основной вид приложения:
+
 ![Вид для широких экранов](images/wireframe_default.png)
 ![Вид для смартфонов](images/wireframe_smartphone.png)
-
+***
 Вместо **Page** подставляется одна из текущих страниц:
+
 ![Страница основного раунда](images/wireframe_page_game.png)
 ![Страница настройки команд](images/wireframe_page_teams.png)
 ![Страница настройки правил](images/wireframe_page_settings.png)
