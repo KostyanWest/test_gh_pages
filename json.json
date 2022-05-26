@@ -4,8 +4,8 @@
       "name": "TestName",
       "description": "TestTest",
       "urls": [
-        "",
-        ""
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
+        "json2.json"
       ]
     }
   ]
