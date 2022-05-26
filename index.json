@@ -1,0 +1,52 @@
+﻿{
+  "list": [
+    {
+      "name": "Случайные существительные",
+      "description": "Словарь случайных существительных, с сайта free-generator.ru.",
+      "tags": [
+        "100 слов",
+        "Легко"
+      ],
+      "urls": [
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
+        "json2.json"
+      ]
+    },
+    {
+      "name": "Случайные прилагательные",
+      "description": "Словарь случайных прилагательных, с сайта free-generator.ru.",
+      "tags": [
+        "100 слов",
+        "Средне"
+      ],
+      "urls": [
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
+        "json2.json"
+      ]
+    },
+    {
+      "name": "Случайные глаголы",
+      "description": "Словарь случайных глаголов, с сайта free-generator.ru.",
+      "tags": [
+        "100 слов",
+        "Сложно"
+      ],
+      "urls": [
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
+        "json2.json"
+      ]
+    },
+    {
+      "name": "FooBar",
+      "description": "Словарь ключевых слов из различных языков программирования",
+      "tags": [
+        "33 слова",
+        "Проф. терминология"
+      ],
+      "urls": [
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
+        "json2.json"
+      ]
+    }
+  ]
+}
