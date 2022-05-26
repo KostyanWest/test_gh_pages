@@ -8,8 +8,7 @@
         "Легко"
       ],
       "urls": [
-        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
-        "json2.json"
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/random_nouns.json"
       ]
     },
     {
@@ -20,8 +19,7 @@
         "Средне"
       ],
       "urls": [
-        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
-        "json2.json"
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/random_adjectives.json"
       ]
     },
     {
@@ -32,8 +30,7 @@
         "Сложно"
       ],
       "urls": [
-        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
-        "json2.json"
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/random_verbs.json"
       ]
     },
     {
@@ -44,8 +41,7 @@
         "Проф. терминология"
       ],
       "urls": [
-        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/json.json?token=GHSAT0AAAAAABTZUEL6XPPKOX4VBFZIPRDQYUOZ5LA",
-        "json2.json"
+        "https://raw.githubusercontent.com/KostyanWest/test_gh_pages/json/foobar.json"
       ]
     }
   ]
